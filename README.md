@@ -78,36 +78,50 @@ Pasos realizados a través del terminal:
     * Analizamos los fichero:
         * bank-additional.csv   
             - Filas: 43.000  
-            - Columnas: 24  
+            - Columnas: 23  
             - Tenemos 10 columnas con valores nulos.  
             - El tipo de datos de los valores de algunas columnas es incorrecto.
             - Cambiamos el nombre de las columnas
-            - Eliminamos la columna unnamed:_0
-            - Guardamos los cambios en un nuevo fichero en la carpeta data\transformados\bank-additional.csv  
+            - Renombramos la columna id_ a id 
 
         * customer-details.xlsx  
             Este fichero consta de 3 hojas  
             * Hoja 1
                 - Filas: 20115
-                - Columnas: 7  
+                - Columnas: 6  
             * Hoja 2
                 - Filas: 8965
-                - Columnas: 7  
+                - Columnas: 6  
             * Hoja 3
                 - Filas: 14090
-                - Columnas: 7  
+                - Columnas: 6  
 
             Las 3 hojas tienen las mismas columnas con el mismo nombre. Agrupamos las 3 hojas en un solo dataframe.
             - Las columnas no tienen valores nulos.  
             - El tipo de datos de los valores de las columnas es correcto.
-
             - Cambiamos el nombre de las columnas
-            - Renombramos la columna ID a id_
-            - Eliminamos la columna unnamed:_0
-            - Guardamos los cambios en un nuevo fichero en la carpeta data\transformados\bank-additional.csv
+            - Renombramos la columna ID a id
+            
+    * Unimos los dos df en un único df llamado bank-customer-detail.csv en la carpeta data\transformados
+        - Filas: 43.000  
+        - Columnas: 28  
+
+* Creamos el archivo limpieza.ipynb para realizar la limpieza y transformación de datos sobre el archivo data\transformados\bank-customer-detail.csv.  
+    * Convertimos todos los datos del dataframe a minúsculas para homogeneizar los datos.  
+    * Sustituimos las "," por los puntos en las columnas 'cons_price_idx', 'cons_conf_idx', 'euribor3m', 'nr_employed'.  
+    * Hacemos una conversión en la columna date, donde cambiamos el nombre del mes por el número correspondiente.  
+    * Cambiamos el tipo de datos de las columnas de tipo fecha y de las columnas de tipo numéricas.
+    * Cambiamos los valores 1, 0, nan por 'Yes', 'No', 'None' en las columnas
+    * Creamos las nuevas columnas:
+        * year_bank: año de la interacción del banco con el cliente
+        * month_bank: mes de la interacción del banco con el cliente
+        * day_bank: día de la semana de la interacción del banco con el cliente
+        * year_customer: año en el que se convirtió en cliente de la empresa.
+        * month_customer: mes en el que se convirtió en cliente de la empresa.
+        * day_customer: día en el que se convirtió en cliente de la empresa.
+    *  Guardamos el fichero en un nuevo archivo 'bank-customers.csv' en la carpeta data.  
+
+* Dentro de la carpeta 'src' creamos un archivo de soporte llamado 'sp_limpieza.py' donde creamos todas las funciones utilizadas en el archivo limpieza.ipnyb
 
 
-
-    
-* Unimos los dos ficheros en un único fichero final llamado bank-customer.csx en la carpeta data.
 
