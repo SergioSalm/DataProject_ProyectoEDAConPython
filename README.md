@@ -69,7 +69,7 @@ Pasos realizados a través del terminal:
     **source venv/Scripts/activate**
 
     3. Instalamos las líbrerías necesarias:  
-    **pip install jupyter pandas numpy openpyxl**
+    **pip install jupyter pandas numpy openpyxl matplotlib seaborn**
 
     4. Creamos el archivo requeriments.txt para registrar las dependencias instaladas:  
     **pip freeze > requirements.txt**
@@ -119,9 +119,19 @@ Pasos realizados a través del terminal:
         * year_customer: año en el que se convirtió en cliente de la empresa.
         * month_customer: mes en el que se convirtió en cliente de la empresa.
         * day_customer: día en el que se convirtió en cliente de la empresa.
-    *  Guardamos el fichero en un nuevo archivo 'bank-customers.csv' en la carpeta data.  
+    * Creamos la columna 'subscribed' para tener un título más aclarativo y borramos la columna original 'y'
+    * Guardamos el fichero en un nuevo archivo 'bank-customers-clean.csv' en la carpeta data.  
 
-* Dentro de la carpeta 'src' creamos un archivo de soporte llamado 'sp_limpieza.py' donde creamos todas las funciones utilizadas en el archivo limpieza.ipnyb
+* Dentro de la carpeta 'src' creamos un archivo de soporte llamado 'sp_limpieza.py' donde creamos todas las funciones utilizadas en el archivo 'limpieza.ipnyb'.
+
+* Creamos el archivo 'columnas_categoricas.ipynb' donde realizamos el análisis de las columnas categóricas y su gestión de los valores nulos.
+    * Volvemos a convertir las columnas date y dt_customer a date. Esto es un punto a tener en cuenta en cada lectura de fichero.
+    * En la columna 'loan', hemos rellenado los valores nulos con el valor 'No', al tener un 80% el valor 'no' y tener un 2.38% de valores nulos. La columna 'default' no la hemos tenido en cuenta al tener un 20.88% de valores nulos. La columna 'housing' tiene el mismo porcentage de valores nulos que 'loan', pero ninguna categoría predominante.
+    * El resto de columnas, hemos creado una categoría nueva para los valores nulos: 'Unknown'. 
+
+* Dentro de la carpeta 'src' creamos:  
+    - archivo de soporte llamado 'sp_analisis.py' donde creamos todas las funciones utilizadas en el análisi del archivo 'columnas_categoricas.ipnyb'.
+    - archivo de soporte llamado 'sp_visualizacion.py' donde creamos todas las funciones utilizadas para visualizar gráficos del archivo 'columnas_categoricas.ipnyb'.
 
 
 
