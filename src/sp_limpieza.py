@@ -88,3 +88,8 @@ def convertir_YesNo(df, lista_col):
     for col in lista_col:
         df[col] = df[col].map({1:"yes", 0:"no", np.nan: 'None'})
 
+def clasificar_valores(df, columna_origen, columna_nueva, bins, valores):
+    df[columna_nueva] = pd.cut(df[columna_origen],
+                                bins=bins,
+                                labels=valores
+                           )

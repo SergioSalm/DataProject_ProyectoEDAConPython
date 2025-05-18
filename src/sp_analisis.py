@@ -101,3 +101,20 @@ def imputar_knn(df, lista_columnas):
     df[new_col] = data_imputed
     display (df[new_col].describe().T)# type: ignore
     return df, new_col
+
+
+def count_ouliers(data, colums):
+    outliers_count = {}
+    outliers_percent = {}
+
+    for col in colums:
+        Q1 = data[col].quantile(0.25)
+        Q3 = data[col].quantile(0.75)
+        IQR = Q3-Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 - 1.5 * IQR
+        outliers = data[(data[col] < lower_bound) | (data[col] > upper_bound)]
+        outliers_count = outliers.shape[0]
+        outliers_percent[col] = round(outliers.shape[0] / data.shape[0], 3)
+
+    return outliers_count, outliers_percent

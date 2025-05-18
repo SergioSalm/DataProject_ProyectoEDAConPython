@@ -80,3 +80,87 @@ def subplot_col_num(df, columnas):
     #ajustar diseño
     plt.tight_layout()
     plt.show()
+
+def barplot_compareCat(df, col1, col2, columnas):
+
+    num_cols = len(columnas)
+    num_rows = (num_cols + 2) // 3 #Calcular filas necesarias para 3 columnas por fila
+    fig, axes = plt.subplots(num_cols, 3, figsize=(15, num_rows * 10))
+
+
+    for i, col in enumerate(columnas):
+        categorias_ordenadas = sorted(df[col].unique())
+
+        countplot = sns.countplot(data = df, x=col, hue=col, ax=axes[i,0], legend=False, order=categorias_ordenadas, palette="tab10")
+        axes[i, 0].set_title(f'Clientes contactados a través de {col}')
+        axes[i, 0].set_ylabel('Total')
+        axes[i, 0].tick_params(axis='x', rotation=90) 
+
+        for p in countplot.patches:
+            height = p.get_height()
+            countplot.text(
+                x=p.get_x() + p.get_width() / 2,
+                y=height,
+                s=f"{height:.2f}",
+                ha='center',
+                va='bottom',
+                fontsize=10,
+                fontweight='bold'
+            )
+
+        df1 = df.groupby(col)[col1].apply(lambda x: (x=='yes').mean()).reset_index()
+        barplot = sns.barplot(data = df1, x=col, y =df1[col1], hue=col, ax=axes[i,1], legend=False, order=categorias_ordenadas, palette="tab10") 
+        axes[i, 1].set_title(f'Clientes suscritos a través de {col}')
+        axes[i, 1].set_ylabel('Porcentaje')
+        axes[i, 1].tick_params(axis='x', rotation=90) 
+        
+        for p in barplot.patches:
+            height = p.get_height()
+            barplot.text(
+                x=p.get_x() + p.get_width() / 2,
+                y=height,
+                s=f"{height:.2f}",
+                ha='center',
+                va='bottom',
+                fontsize=10,
+                fontweight='bold'
+            )
+
+        df2 = df.groupby(col)[col2].apply(lambda x: (x==1).mean()).reset_index()
+        barplot = sns.barplot(data = df2, x=col, y =df2[col2], hue=col, ax=axes[i,2], legend=False, order= categorias_ordenadas, palette="tab10")
+        axes[i, 2].set_title(f'Clientes suscritos al primer contacto a través de {col}')
+        axes[i, 2].set_ylabel('Porcentaje')
+        axes[i, 2].tick_params(axis='x', rotation=90) 
+        for p in barplot.patches:
+            height = p.get_height()
+            barplot.text(
+                x=p.get_x() + p.get_width() / 2,
+                y=height,
+                s=f"{height:.2f}",
+                ha='center',
+                va='bottom',
+                fontsize=10,
+                fontweight='bold'
+            )
+
+        
+    plt.tight_layout()
+    plt.show()
+
+def barplot_compareCol(df, col1, col2):
+
+    prop_df = (
+        df.groupby(col1)[col2]
+        .value_counts(normalize=True)
+        .rename('proportion')
+        .reset_index()
+    )
+  
+    figsize=(8, 6)
+    plt.figure(figsize=figsize)
+    sns.barplot(data=prop_df, x=col1, y='proportion', hue=col2)
+    plt.title(f"Proporción de '{col2}' por '{col1}'")
+    plt.ylabel("Proporción")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
