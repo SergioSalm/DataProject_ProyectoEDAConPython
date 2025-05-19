@@ -1,8 +1,10 @@
 # 🌟 Análisis de Campaña de Marketing Bancario en Portugal
 
-![Portada del Proyecto](https://images.unsplash.com/photo-1581090700227-1e8e1a236a59?auto=format\&fit=crop\&w=1350\&q=80)
+<div style="height: 600px; width: 1500px; text-align: center; ">
+    <img src="images/bank.jpeg" alt="portada" />
+</div>
 
-[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.11.9-blue?logo=python)](https://www.python.org/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?logo=jupyter)](https://jupyter.org/)
 [![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-green?logo=pandas)](https://pandas.pydata.org/)
 [![Seaborn](https://img.shields.io/badge/Seaborn-Visualization-blueviolet)](https://seaborn.pydata.org/)
@@ -36,6 +38,7 @@ Este proyecto tiene como objetivo analizar los datos de una campaña de marketin
 
 ---
 
+<a id="datos-utilizados"></a>
 ## 📅 Datos Utilizados
 
 * **Fuente:** [thePower- DataProject: Proyecto EDA con Python](https://s3.amazonaws.com/staticcontent.thepowermba/Bootcamp+Data+%26+Analytics/D%26A24/Phyton/DatosProyecto.rar)
@@ -69,8 +72,8 @@ Este proyecto tiene como objetivo analizar los datos de una campaña de marketin
     | nr.employed       | El número de empleados   | Categórico    |
     | y    | Indica si el cliente ha suscrito un producto o servicio (Sí/No)                  | Categórico |    
     | date   | La fecha en la que se realizó la interacción con el cliente   |
-    | latitude   | Columna erronea | Numérico   |
-    | longitude      | Columna erronea     | Numérico    |
+    | latitude   | Columna errónea | Numérico   |
+    | longitude      | Columna errónea     | Numérico    |
     | id_      | Un identificador único para cada registro en el dataset.     | Categórico    |
 
 * **Fichero customer-detail.xlxs**
@@ -88,10 +91,10 @@ Este proyecto tiene como objetivo analizar los datos de una campaña de marketin
     | ID    | Identificador único del cliente     | Categórico    |
     
 
-
-## ⚖️ Proceso de Análisis
-
-### 🚼 Limpieza de Datos
+<a id="proceso-de-análisis"></a>
+## ⚖️ Proceso de Análisis 
+<a id="limpieza-de-datos"></a>
+### 🚼 Limpieza de Datos 
 * Eliminamos las columnas 'latitude' y 'longitude'.
 * Convertimos todos los datos del dataframe a minúsculas para homogeneizar los datos.  
 * Sustituimos las "," por los puntos en las columnas 'cons_price_idx', 'cons_conf_idx', 'euribor3m', 'nr_employed'.  
@@ -107,52 +110,91 @@ Este proyecto tiene como objetivo analizar los datos de una campaña de marketin
     * customer_month: mes en el que se convirtió en cliente de la empresa.
     * Creamos la columna 'subscribed' para tener un título más aclarativo y borramos la columna original 'y'.  
     * Creamos la columna 'duration_min' para tener los tiempos de las llamadas en minutos y eliminamos la columna 'duration'. 
+    * Creamos la columna 'FCR' para saber cuando clientes contrataron en el primer contacto.
 
+<a id="análisis-exploratorio"></a>
 ### 💡 Análisis Exploratorio
-PENDIENTE
-* Distribuciones univariadas y bivariadas.
-* Segmentación por estado civil, profesión, edad, y contacto.
-* Cálculo de tasas de conversión por grupo.
 
+* Realizamos gráficos de barra para analizar las variables categóricas.
+    * Gestionamos los valores nulos de las columnas 
+        - job: rellenamos los calores con 'unkown'.
+        - marital: rellenamos los calores con 'unkown'.
+        - education: rellenamos los calores con 'unkown'.
+        - default: tiene un 0.999912 con valores 'no' y un 0.000088 con valores 'yes'. Al tener un 20.88% de valores nulos, decidimos que ese valor es muy alto y rellenaremos con 'unknow'. 
+        - housing: 'housing' tiene el mismo porcentage de valores nulos que 'loan', pero ninguna categoría predominante.
+        - loan: tiene un 0.84438 con valores 'no' y un 0.15562 con valores 'yes'. Su porcentaje de nulos es de 2.38%, en esta columna si que vamos a rellenar lo valores nulos con 'no'.  
+
+* Realizamos histogramas y diagramas de caja para analizar las variables numéricas.
+    - Encontramos outliers en las columnas age, duration_min, campaign, previous, cons_conf_idx, pdays.
+        - No vamos a eliminar nungún registro de las columnas con outliers. El número de regisrtos y el porcentaje de los outliers no justifica su eliminación o cambio de valor.
+    * Gestionamos los valores nulos. Dividimos las columnas en las que tiene un umbra superior al 5% e inferior al 5%.
+        * Inferior al 5%. Utilizamos el método fillna para rellenar los nulos:
+            * cons_price_idx: con outliers y valores no uniformes. Valores similares entre media y mediana. Rellenamos nulos con la media.
+            * contact_year: no tiene outliers, distribución uniforme, valores similares entre media y mediana. Utilizamos la  mediana, al ser un año no podemos tener decimales.
+            * contact_month: no tiene outliers, distribución uniforme, valores similares entre media y mediana. Utilizamos la  mediana, al ser un año no podemos tener decimales.
+        * Superior al 5%. Utilizamos los método iteriteveimputer y knn  para rellenar los nulos:
+            * Nos quedaremos con los valores del knn
+                - age: la mediana del knn se acerca más a la mediana original, y la media se desvía un poco más que la del iterative, pero no mucho. Nos quedaremos con los valores del knn.
+                - euribor3m: la media del iterative es igual que la media del original. La mediana se acerca más la del knn.
+            * La columna age pasa a ser age_knn y la columna euribor3m pasa a ser eutibor3m_knn
+
+* Realizamos histogramas y diagramas de caja para analizar las variables de tipo fecha.
+    - Estas columnas no presentas outliers.
+
+* Cálculo de tasas de conversión.
+* Cálculo de tasa de resolución en el primer contacto.
+
+<a id="visualización"></a>
 ### 🎨 Visualización
 
 * Gráficos de barra (countplot), histogramas (histplot), diagramas de caja (boxplot) y diagramas de barra (barplot) para detectar patrones.
 
 ---
-
+<a id="principales-hallazgos"></a>
 ## 📊 Principales Hallazgos
 
 * **Tasa de conversión general:** `tasa = 11,27%`
 * **Tasa de resolución en el primer contacto:** `tasa = 5,57%`
-* Clientes **mayores de 50** y aquellos con **contacto mediante "cellular"** tienen mayor conversión.
+* Clientes contactados a través del móvil tienen mayor conversión.
 * Profesiones como "student" y "retired" muestran tasas altas de suscripción.
-* La variable `duration` (duración de llamada) tiene alta correlación con el resultado.
-
+* Cliente que ya habían contratado un servicio con el banco anteriormente vuelven a contratar servicios.
+  
 ---
-
+<a id="visualizaciones"></a>
 ## 🖼️ Visualizaciones
 
-* ![placeholder1](https://via.placeholder.com/600x300.png?text=Gr%C3%A1fico+1:+Tasa+de+Conversi%C3%B3n+por+Edad)
+  > **Gráfico 1:** Profesiones con mayor % de conversión.
+<div style="text-align: left; ">
+    <img src="images/job.jpg" alt="job" />
+</div>
 
-  > **Gráfico 1:** Relación entre edad y tasa de suscripción.
-* ![placeholder2](https://via.placeholder.com/600x300.png?text=Gr%C3%A1fico+2:+Profesiones+con+mejor+rendimiento)
+  > **Gráfico 2:** Impacto del tipo de contacto.
+<div style="text-align: left; ">
+    <img src="images/contact.jpg" alt="contact" />
+</div>
 
-  > **Gráfico 2:** Profesiones con mayor % de conversión.
-* ![placeholder3](https://via.placeholder.com/600x300.png?text=Gr%C3%A1fico+3:+Contactabilidad+y+conversiones)
-
-  > **Gráfico 3:** Impacto del tipo de contacto.
+  > **Gráfico 3:** Cliente que habían contratado en la campaña de marketing anterior.
+<div style="text-align: left; ">
+    <img src="images/previousOut.jpg" alt="contact" />
+</div>
 
 ---
-
+<a id="conclusiones-y-recomendaciones"></a>
 ## 📖 Conclusiones y Recomendaciones
+    
+**Conclusión:**
+* La campaña de marketing ha sido mala. Solamente han conseguido captar el 11% de clientes a los que han contactado, de los cuales el 5% fueron en la primera llamada.
+* Parece que no se han enfocado al público correcto. 
 
-* **Segmentar futuras campañas** hacia personas mayores, jubilados o estudiantes.
-* Priorizar el uso de **contacto telefónico celular**.
+**Recomendaciones:**
+* **Segmentar futuras campañas** jubilados o estudiantes.
+* Priorizar el uso de **contacto a través del móvil**.
 * Invertir en llamadas de mayor duración (indicador indirecto de interés).
+* Centrarse en personas del propio banco que ya hayan contratado un servicio con anterioridad.
 * Excluir perfiles con baja probabilidad para mejorar ROI.
 
 ---
-
+<a id="instalación-y-configuración"></a>
 ## 🛠️ Instalación y Configuración en windows
 
 ```bash
@@ -169,36 +211,40 @@ pip install -r requirements.txt
 ```
 
 ---
-
+<a id="estructura-del-proyecto"></a>
 ## 📁 Estructura del Proyecto
 
 ```
 .
-├── data/                 # Datos brutos o preprocesados
-│  ├─ Orig                    #Carpeta con los archivos originales
-│  │  ├─ bank-additional.csv
+├── data/                           # Datos brutos y procesados
+│  ├─ Orig                          # Carpeta con los archivos originales
+│  │  ├─ bank-additional.csv        
 │  │  ├─ customer-details.xlsx
-│  ├─ transformados                    #Carpeta con los archivos originales
+│  ├─ transformados                 # Carpeta con los archivos transformados
 │  │  ├─ bank-customers-detail.csv
-│  ├─ data-clean.csv                    #Carpeta con los archivos originales
-│  ├─ data-metricas.csv                    #Carpeta con los archivos originales
-├── jupyters/             # Jupyter Notebooks con el análisis
-│  ├─ Orig   
-│  ├─ Orig   
-│  ├─ Orig   
-│  ├─ Orig   
-│  ├─ Orig   
-├── images/               # Visualizaciones exportadas
-├── src/                  # Scripts auxiliares
-│  ├─ Orig   
-│  ├─ Orig   
-│  ├─ Orig   
+│  ├─ data-clean.csv                # Fichero con los datos limpios
+│  ├─ data-metricas.csv             # Fichero con los datos para las métricas
+├── jupyters/                       # Jupyter Notebooks con los ficheros para el análisis
+│  ├─ 1-EDA_preliminar.ipynb   
+│  ├─ 2-limpieza.ipynb              # Limpieza y transformación de datos
+│  ├─ 3-columnas_categoricas.ipynb  # Análisis de las columnas categóricas y su gestión de los valores nulos
+│  ├─ 4-columnas_numericas.ipynb    # Análisis de las columnas categóricas y su gestión de los valores nulos
+│  ├─ 5-marketing.ipynb             # Análisis de las métricas
+├── images/                         # Visualizaciones exportadas
+│  ├─ bank.jpeg
+│  ├─ contact.jpg
+│  ├─ job.jpg
+│  ├─ previousOut.jpg
+├── src/                            # Archivos de soporte de python
+│  ├─ sp_limpieza.py                # Funciones utilizadas en el archivo 'limpieza.ipnyb'
+│  ├─ sp_analisis.py                # Funciones utilizadas en el análisis de las columnas categóricas y numéricas
+│  ├─ sp_visualizacion.py           # Funciones utilizadas para visualizar gráficos de las columnas categóricas y numéricas   
 ├── README.md             # Documentación principal
 └── requirements.txt      # Dependencias del proyecto
 ```
 
 ---
-
+<a id="guía-de-uso"></a>
 ## 🔧 Guía de Uso
 
 1. Abre la carpeta jupyters y ejecuta los ficheros en el siguiente orden:
@@ -212,14 +258,14 @@ pip install -r requirements.txt
 3. Revisa los gráficos generados y modifica filtros para nuevas segmentaciones.
 
 ---
-
+<a id="próximos-pasos"></a>
 ## 📈 Próximos Pasos
 
 * Implementar modelos predictivos.
 * Automatizar el análisis para nuevas campañas.
 
 ---
-
+<a id="contribución-y-contacto"></a>
 ## 🛠️ Contribución y Contacto
 
 ¡Contribuciones bienvenidas! Abre un pull request o contacta:
@@ -227,13 +273,13 @@ pip install -r requirements.txt
 * Sergio Salmerón - [GitHub Profile](https://github.com/SergioSalm)
 
 ---
-
+<a id="licencia"></a>
 ## ✉️ Licencia
-
+Este proyecto está licenciado bajo la licencia MIT.
 
 
 ---
-
+<a id="agradecimientos"></a>
 ## 🙏 Agradecimientos
 
 Gracias a:
@@ -242,87 +288,5 @@ Gracias a:
 * Comunidad de Python y Data Science por recursos y documentación.
 
 ---
-
-
---------------------------------------------------------------------
-
-## Herramientas utilizadas
-Python (Pandas, seaborn, matplotlib)
-Jupyter Notebook
-
-## Pasos del análisis
-* Creación del repositorio. Creamos el archivo gitignore para controlar que archivos y carpetas queremos que se suban.
-* Creación del sistema de carpetas:
-    * data: carpeta donde tenemos el fichero con el que vamos a trabajar.Contiene:
-        * data-clean.csv
-
-    * data\orig: carpeta donde guardamos los ficheros originales. Contiene:
-        * bank-additional.csv
-        * customer-details.xlsx  
-
-    * data\transformados: carpeta donde guardamos los ficheros transformados. Contiene:  
-        * bank-customers-detail.csv
-    * jupyter: Guardamos los archivos de jupyter notebook utilizados durante el proceso. Contiene:
-        * 1-EDA_preliminar.ipynb
-        * 2-limpieza.ipynb
-        * 3-columnas_categoricas.ipynb
-        * 4-columnas_numericas.ipynb
-        * 5-marketing.ipynb
-
-    * src: guardamos los archivos de soporte de python con las funciones que hemos utilizado en el análisis.  
-* Creación del entorno: Creamos un entorno exclusivo para el proyecto para gestionar las líbrerías y sus versiones.  
-
-
-
-
-
-
-* Creamos el archivo '2-limpieza.ipynb' para realizar la limpieza y transformación de datos sobre el archivo data\transformados\bank-customers-detail.csv.  
- 
-    * Guardamos el fichero en un nuevo archivo 'bank-customers-clean.csv' en la carpeta data.  
-
-* Dentro de la carpeta 'src' creamos un archivo de soporte llamado 'sp_limpieza.py' donde creamos todas las funciones utilizadas en el archivo 'limpieza.ipnyb'.
-
-* Creamos el archivo '3-columnas_categoricas.ipynb' donde realizamos el análisis de las columnas categóricas y su gestión de los valores nulos.
-    * En la columna 'loan', hemos rellenado los valores nulos con el valor 'No', al tener un 80% el valor 'no' y tener un 2.38% de valores nulos. La columna 'default' no la hemos tenido en cuenta al tener un 20.88% de valores nulos. La columna 'housing' tiene el mismo porcentage de valores nulos que 'loan', pero ninguna categoría predominante.
-    * El resto de columnas, hemos creado una categoría nueva para los valores nulos: 'Unknown'. 
-
-* Creamos el archivo de soporte llamado 'sp_analisis.py' donde creamos todas las funciones utilizadas en el análisi del archivo 'columnas_categoricas.ipnyb'.
-* Creamos el archivo de soporte llamado 'sp_visualizacion.py' donde creamos todas las funciones utilizadas para visualizar gráficos del archivo 'columnas_categoricas.ipnyb'.
-
-* Creamos el archivo '4-columnas_numericas.ipynb' donde realizamos el análisis de las columnas categóricas y su gestión de los valores nulos.  
-    * Hemos visto la presencia de outliers en las columnas 'age', 'duration_min', 'campaign', 'pdays', 'previous', 'cons_conf_idx' a través de los histogramas y los diagramas de caja.
-        * No vamos a eliminar nungún registro de las columnas con outliers. El número de registros y el porcentaje de los outliers no justifica su eliminación o canvio de valor.
-    * Analizamos los valores nulos. Los dividimos en dos grupos:  
-        1- Columnas por debajo del umbral del 5%, donde utilizamos el método fillna:
-        - cons_price_idx: con outliers y valores no uniformes. Valores similares entre media y mediana. Rellenamos nulos con la media.
-        - contact_year: no tiene outliers, distribución uniforme, valores similares entre media y mediana. Utilizamos la  mediana, al ser un año no podemos tener decimales.
-        - contact_month: no tiene outliers, distribución uniforme, valores similares entre media y mediana. Utilizamos la  mediana, al ser un año no podemos tener decimales.
-
-        2- Columnas por encima del umbral del 5%, donde utilizamos los métodos iterative imputer y knn imputer:
-        * Nos quedaremos con los valores del knn
-          - age: la mediana del knn se acerca más a la mediana original, y la media se desvía un poco más que la del iterative, pero no mucho. Nos quedaremos con los valores del knn.
-          - euribor3m: la media del iterative es igual que la media del original. La mediana se acerca más la del knn.
-        
-        
-* Modificamos el archivo de soporte llamado 'sp_analisis.py' donde creamos las funciones necesarias para la gestión de nulos de las columnas numéricas.        
-* Modificamos el archivo de soporte llamado 'sp_visualizacion.py' donde creamos todas las funciones utilizadas para visualizar gráficos del archivo 'columnas_numericas.ipnyb'.
-
-* Creamos el archivo '5-marketing.ipynb' para crear nueva métricas.
-    * Métricas nuevas:
-        - Tasa de resolución del primer contacto (FCR): Cuantos clientes han contratado en el primer contacto.
-    * Analizamos las gráficas de las nuevas columnas para ver la presenciade outliers y la distribución de los datos.
-
-
-## Conclusiones
-La campaña de marketing ha sido mala. Solamente han conseguido captar el 11% de clientes a los que han contactado, de los cuales el 5% fueron en la primera llamada.
-El perfil de personas que han contrado servicios es:
-    - Estudiantes y parados.
-    - Analfabetos.
-    - Ya habían contratado un servicio con el banco anteriormente.
-    - Edad entre 30-40 años
-
-El tipo de contacto más efectivo a sido a través del movil.
-Parece que no se han enfocado al público correcto. 
 
 
