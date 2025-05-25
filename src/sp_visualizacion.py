@@ -82,7 +82,22 @@ def subplot_col_num(df, columnas):
     plt.show()
 
 def barplot_compareCat(df, col1, col2, columnas):
+    """Genera una serie de subgráficos comparativos para variables categóricas.
 
+    Para cada columna categórica en `columnas`, se generan 3 gráficos:
+    1. Conteo de categorías.
+    2. Porcentaje de valores 'yes' en `col1`.
+    3. Porcentaje de valores 1 en `col2`.
+
+    Args:
+        df (pd.DataFrame): DataFrame de entrada.
+        col1 (str): Nombre de columna con valores tipo 'yes'/'no'.
+        col2 (str): Nombre de columna binaria con 1/0 (ej. éxito en primer contacto).
+        columnas (list): Lista de nombres de columnas categóricas a analizar.
+
+    Returns:
+        None
+    """
     num_cols = len(columnas)
     num_rows = (num_cols + 2) // 3 #Calcular filas necesarias para 3 columnas por fila
     fig, axes = plt.subplots(num_cols, 3, figsize=(15, num_rows * 10))
@@ -148,7 +163,17 @@ def barplot_compareCat(df, col1, col2, columnas):
     plt.show()
 
 def barplot_compareCol(df, col1, col2):
+    """
+    Crea un gráfico de barras que muestra la proporción de valores de `col2` agrupados por `col1`.
 
+    Args:
+        df (pd.DataFrame): DataFrame que contiene los datos.
+        col1 (str): Columna categórica base para agrupar.
+        col2 (str): Columna categórica cuya distribución proporcional se quiere visualizar.
+
+    Returns:
+        None
+    """
     prop_df = (
         df.groupby(col1)[col2]
         .value_counts(normalize=True)

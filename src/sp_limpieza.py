@@ -40,6 +40,11 @@ def eda_preliminar (df):
         print('------------------')    
 
 def valores_minus (df):
+    """Convierte todos los valores de las columnas de tipo object (categóricas) a minúsculas.
+
+    Args:
+        df (pd.DataFrame): DataFrame que contiene las columnas a transformar.
+    """
     for col in df.select_dtypes(include='O').columns:
         df[col] = df[col].str.lower()
 
@@ -89,6 +94,14 @@ def convertir_YesNo(df, lista_col):
         df[col] = df[col].map({1:"yes", 0:"no", np.nan: 'None'})
 
 def clasificar_valores(df, columna_origen, columna_nueva, bins, valores):
+    """Clasifica los valores de una columna numérica en categorías según rangos definidos.
+
+    df (pd.DataFrame): DataFrame de entrada.
+        columna_origen (str): Nombre de la columna numérica que se desea categorizar.
+        columna_nueva (str): Nombre de la nueva columna categórica resultante.
+        bins (list): Lista de límites para definir los intervalos.
+        valores (list): Etiquetas/categorías asignadas a cada intervalo.
+    """
     df[columna_nueva] = pd.cut(df[columna_origen],
                                 bins=bins,
                                 labels=valores
