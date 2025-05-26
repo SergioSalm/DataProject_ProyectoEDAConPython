@@ -71,7 +71,7 @@ Este proyecto tiene como objetivo analizar los datos de una campaña de marketin
     | euribor3m    | La tasa de interés de referencia a tres meses      | Categórico    |
     | nr.employed       | El número de empleados   | Categórico    |
     | y    | Indica si el cliente ha suscrito un producto o servicio (Sí/No)                  | Categórico |    
-    | date   | La fecha en la que se realizó la interacción con el cliente   |
+    | date   | La fecha en la que se realizó la interacción con el cliente   | Fecha / hora |
     | latitude   | Columna errónea | Numérico   |
     | longitude      | Columna errónea     | Numérico    |
     | id_      | Un identificador único para cada registro en el dataset.     | Categórico    |
